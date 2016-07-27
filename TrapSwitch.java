@@ -64,69 +64,82 @@ public class TrapSwitch {
     private void shuffleData(){
         try (BufferedReader br = new BufferedReader(new FileReader("dblog.txt"))){
             String line;
-            int linecount = 0;
-            
+            int bLinecount = 0;
+            int pLinecount = 0;
+            ArrayList<String> eachLine = new ArrayList<String>();
+            ArrayList<String> bPolicyNumbers = new ArrayList<String>();
+            ArrayList<String> pPolicyNumbers = new ArrayList<String>();
+            ArrayList<String> businessNames = new ArrayList<String>();
+            ArrayList<String> personalNames = new ArrayList<String>();
+            ArrayList<String> taxIDNumbers = new ArrayList<String>();
+            ArrayList<String> socialSecurities = new ArrayList<String>();
+            ArrayList<String> bAccountNumbers = new ArrayList<String>();
+            ArrayList<String> pAccountNumbers = new ArrayList<String>();
             while((line = br.readLine()) != null){
-                linecount++;
+                eachLine.add(line);
             }
 
-            String[] bPolicyNumbers = new String[linecount];
-            String[] businessNames = new String[linecount];
-            String[] taxIDNumbers = new String[linecount];
-            String[] bAccountNumbers = new String[linecount];
-            String[] pPolicyNumbers = new String[linecount];
-            String[] personalNames = new String[linecount];
-            String[] socialSecurities = new String[linecount];
-            String[] pAccountNumbers = new String[linecount];
-
-            int i = 0;
-            while((line = br.readLine()) != null){
-                String[] parsedLog = line.split("\\,", 5);
-
-                if(parsedLog[0].equalsIgnoreCase("B")){
-                    //handle business
-                    bPolicyNumbers[i] = parsedLog[1];
-                    businessNames[i] = parsedLog[2];
-                    taxIDNumbers[i] = parsedLog[3];
-                    bAccountNumbers[i] = parsedLog[4];
-                    i++;
+            for(String element : eachLine){
+                if(element.split(",")[0].equalsIgnoreCase("B")){
+                    bLinecount++;
+                    bPolicyNumbers.add(element.split(",")[1]);
+                    businessNames.add(element.split(",")[2]);
+                    taxIDNumbers.add(element.split(",")[3]);
+                    bAccountNumbers.add(element.split(",")[4]);
                 }
-                else{
-                    //handle personal
-                    pPolicyNumbers[i] = parsedLog[1];
-                    personalNames[i] = parsedLog[2];
-                    socialSecurities[i] = parsedLog[3];
-                    pAccountNumbers[i] = parsedLog[4];
-                    i++;
+                else if(element.split(",")[0].equalsIgnoreCase("P")){
+                    pLinecount++;
+                    pPolicyNumbers.add(element.split(",")[1]);
+                    personalNames.add(element.split(",")[2]);
+                    socialSecurities.add(element.split(",")[3]);
+                    pAccountNumbers.add(element.split(",")[4]);
                 }
+                
             }
+
             populateHoneypot(bPolicyNumbers, businessNames, taxIDNumbers, bAccountNumbers, pPolicyNumbers,
-                            personalNames, socialSecurities, pAccountNumbers, linecount);
+                          personalNames, socialSecurities, pAccountNumbers, bLinecount, pLinecount);
         } catch(Exception e){
             System.out.println("Error " + e);
         }
     }
 
-    private void populateHoneypot(String[] bPolicyNumbers, String[] businessNames, String[] taxIDNumbers, String[] bAccountNumbers,
-                                    String[] pPolicyNumbers, String[] personalNames, String[] socialSecurities, String[] pAccountNumbers,
-                                    int linecount){
+    private void populateHoneypot(ArrayList<String> bPolicyNumbers,
+                                  ArrayList<String> businessNames, 
+                                  ArrayList<String> taxIDNumbers,
+                                  ArrayList<String> bAccountNumbers,
+                                  ArrayList<String> pPolicyNumbers,
+                                  ArrayList<String> personalNames,
+                                  ArrayList<String> socialSecurities,
+                                  ArrayList<String> pAccountNumbers,
+                                  int bLinecount, int pLinecount){
         //connect to honey
         //insert into these statements
         Random rand = new Random();
-        int b = rand.nextInt(linecount) + 0;
-        int c = rand.nextInt(linecount) + 0;
-        int d = rand.nextInt(linecount) + 0;
-        int e = rand.nextInt(linecount) + 0;
-
-
-        //linecount is the maximum and the 0 is our minimum 
-        int j = rand.nextInt(1) + 0;
-        if(j == 0){
-            System.out.println("B"+","+bPolicyNumbers[b]+","+businessNames[c]+","+taxIDNumbers[d]+","+bAccountNumbers[e]);
-        } 
-        else{ 
-            System.out.println("P"+","+pPolicyNumbers[b]+","+personalNames[c]+","+socialSecurities[d]+","+pAccountNumbers[e]);
+        int totalLineCount = pLinecount + bLinecount;
+        for(int i = 0; i <= totalLineCount; i++){ 
+            int j = rand.nextInt(2) + 0;
+            if(j == 0){
+                Random bRand = new Random();
+                int b = bRand.nextInt(bLinecount) + 0;
+                int c = bRand.nextInt(bLinecount) + 0;
+                int d = bRand.nextInt(bLinecount) + 0;
+                int e = bRand.nextInt(bLinecount) + 0;
+                System.out.println("B"+","+bPolicyNumbers.get(b)+
+                                ","+businessNames.get(c)+","+taxIDNumbers.get(d)+
+                                ","+bAccountNumbers.get(e));
+                
+            } 
+            else{
+                Random pRand = new Random();
+                int b = pRand.nextInt(pLinecount) + 0;
+                int c = pRand.nextInt(pLinecount) + 0;
+                int d = pRand.nextInt(pLinecount) + 0;
+                int e = pRand.nextInt(pLinecount) + 0;
+                System.out.println("P"+","+pPolicyNumbers.get(b)+
+                                ","+personalNames.get(c)+","+socialSecurities.get(d)+
+                                ","+pAccountNumbers.get(e));
+            }
         }
-
     }
 }

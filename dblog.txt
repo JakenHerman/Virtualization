@@ -5,4 +5,4 @@ B, 0004, Google, 483902, 032063
 B, 0005, Apple, 472893, 392523
 P, 0006, Jim, 493949340, 293012
 P, 0007, Jaken, 100221234, 493020
-B, 0008, Seagate, 392039, 477777VM1, select * from TestVM2, select * from Test
+B, 0008, Seagate, 392039, 477777
